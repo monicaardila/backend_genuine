@@ -3,6 +3,19 @@
 # Script de inicio para Railway
 echo "Iniciando aplicación Laravel..."
 
+# Configurar base de datos para Railway
+echo "Configurando base de datos..."
+if [ ! -z "$DATABASE_URL" ]; then
+    echo "Usando DATABASE_URL de Railway"
+    # Railway proporciona DATABASE_URL, extraer componentes
+    export DB_CONNECTION=pgsql
+    export DB_HOST=$(echo $DATABASE_URL | sed -n 's/.*@\([^:]*\):.*/\1/p')
+    export DB_PORT=$(echo $DATABASE_URL | sed -n 's/.*:\([0-9]*\)\/.*/\1/p')
+    export DB_DATABASE=$(echo $DATABASE_URL | sed -n 's/.*\/\([^?]*\).*/\1/p')
+    export DB_USERNAME=$(echo $DATABASE_URL | sed -n 's/.*:\/\/\([^:]*\):.*/\1/p')
+    export DB_PASSWORD=$(echo $DATABASE_URL | sed -n 's/.*:\([^@]*\)@.*/\1/p')
+fi
+
 # Generar clave de aplicación si no existe
 if [ -z "$APP_KEY" ]; then
     echo " Generando APP_KEY..."
