@@ -1,61 +1,299 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏫 Genuine School API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+API REST para gestión de estudiantes implementada con **Laravel** y **Arquitectura Limpia (Clean Architecture)**.
 
-## About Laravel
+## Arquitectura
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Este proyecto implementa los principios de **Clean Architecture** para mantener un código limpio, mantenible y testeable.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Estructura del Proyecto
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```
+app/
+├── Domain/                    # Capa de Dominio (más interna)
+│   ├── Entities/             # Entidades de negocio puras
+│   │   └── Student.php       # Entidad Student
+│   └── Repositories/         # Interfaces de repositorios
+│       └── StudentRepositoryInterface.php
+├── Application/              # Capa de Aplicación
+│   ├── Services/             # Casos de uso y lógica de aplicación
+│   │   └── StudentService.php
+│   └── DTOs/                 # Data Transfer Objects
+│       └── StudentDTO.php
+├── Infrastructure/           # Capa de Infraestructura
+│   └── Repositories/         # Implementaciones concretas
+│       └── EloquentStudentRepository.php
+├── Presentation/             # Capa de Presentación
+│   ├── Http/Controllers/     # Controladores REST
+│   │   └── StudentController.php
+│   ├── Requests/             # Form Requests para validación
+│   │   ├── CreateStudentRequest.php
+│   │   └── UpdateStudentRequest.php
+│   └── Resources/            # API Resources
+│       └── StudentResource.php
+└── Shared/                   # Utilidades compartidas
+    └── Exceptions/           # Excepciones personalizadas
+        ├── StudentNotFoundException.php
+        └── StudentEmailAlreadyExistsException.php
+```
 
-## Learning Laravel
+### Principios de Clean Architecture
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. **Independencia de frameworks** - No depende de Laravel en las capas internas
+2. **Testabilidad** - Lógica de negocio aislada y fácil de testear
+3. **Independencia de la UI** - La UI puede cambiar sin afectar el negocio
+4. **Independencia de la base de datos** - Fácil cambiar de MySQL a PostgreSQL
+5. **Independencia de agentes externos** - La lógica de negocio no sabe nada del mundo exterior
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🚀 Características
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Autenticación JWT** completa
+- **CRUD de estudiantes** con validación
+- **Arquitectura limpia** y escalable
+- **Manejo de errores** robusto
+- **Logs detallados** para debugging
+- **Validación de datos** con Form Requests
+- **API Resources** para respuestas consistentes
+- **Inyección de dependencias** con Service Providers
 
-## Laravel Sponsors
+## Requisitos
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- PHP >= 8.1
+- Composer
+- PostgreSQL (o MySQL)
+- Laravel 11.x
 
-### Premium Partners
+## Instalación
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/monicaardila/backend_genuine.git
+cd backend_genuine
+```
 
-## Contributing
+### 2. Instalar dependencias
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Configurar variables de entorno
+```bash
+cp .env.example .env
+```
 
-## Code of Conduct
+Editar `.env` con tu configuración:
+```env
+APP_NAME="Genuine School API"
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://localhost:8000
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=genuine_school
+DB_USERNAME=postgres
+DB_PASSWORD=tu_password
 
-## Security Vulnerabilities
+JWT_SECRET=tu_jwt_secret_aqui
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4. Generar claves
+```bash
+php artisan key:generate
+php artisan jwt:secret
+```
 
-## License
+### 5. Ejecutar migraciones y seeders
+```bash
+php artisan migrate
+php artisan db:seed
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 6. Iniciar servidor
+```bash
+php artisan serve
+```
+
+## API Endpoints
+
+### Autenticación
+
+#### Login
+```http
+POST /api/login
+Content-Type: application/json
+
+{
+  "email": "prueba@example.com",
+  "password": "12345678"
+}
+```
+
+**Respuesta:**
+```json
+{
+  "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+  "token_type": "bearer",
+  "expires_in": 3600
+}
+```
+
+### Estudiantes
+
+Todos los endpoints de estudiantes requieren autenticación JWT.
+
+#### Listar estudiantes
+```http
+GET /api/students
+Authorization: Bearer {token}
+```
+
+#### Crear estudiante
+```http
+POST /api/students
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "name": "Juan Pérez",
+  "email": "juan@example.com",
+  "grade": "10°"
+}
+```
+
+#### Ver estudiante específico
+```http
+GET /api/students/{id}
+Authorization: Bearer {token}
+```
+
+#### Actualizar estudiante
+```http
+PUT /api/students/{id}
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "name": "Juan Carlos Pérez",
+  "email": "juan.carlos@example.com",
+  "grade": "11°"
+}
+```
+
+#### Eliminar estudiante
+```http
+DELETE /api/students/{id}
+Authorization: Bearer {token}
+```
+
+## Desarrollo
+
+### Estructura de respuestas
+
+Todas las respuestas siguen un formato consistente:
+
+**Éxito:**
+```json
+{
+  "data": { ... },
+  "message": "Operación exitosa"
+}
+```
+
+**Error:**
+```json
+{
+  "message": "Descripción del error"
+}
+```
+
+### Agregar nueva funcionalidad
+
+1. **Crear entidad** en `app/Domain/Entities/`
+2. **Definir interfaz** en `app/Domain/Repositories/`
+3. **Crear DTO** en `app/Application/DTOs/`
+4. **Implementar servicio** en `app/Application/Services/`
+5. **Crear repositorio** en `app/Infrastructure/Repositories/`
+6. **Crear controlador** en `app/Presentation/Http/Controllers/`
+7. **Registrar dependencias** en `app/Providers/`
+
+### Testing
+
+```bash
+# Ejecutar tests
+php artisan test
+
+# Ejecutar tests con coverage
+php artisan test --coverage
+```
+
+## Despliegue
+
+### Railway
+
+El proyecto está configurado para desplegarse en Railway:
+
+1. Conecta tu repositorio de GitHub
+2. Railway detectará automáticamente la configuración
+3. Agrega las variables de entorno necesarias
+4. El despliegue se realizará automáticamente
+
+### Variables de entorno para producción
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+JWT_SECRET=tu_jwt_secret_muy_seguro
+LOG_LEVEL=error
+```
+
+## Base de datos
+
+### Migraciones
+
+```bash
+# Crear migración
+php artisan make:migration create_students_table
+
+# Ejecutar migraciones
+php artisan migrate
+
+# Revertir migración
+php artisan migrate:rollback
+```
+
+### Seeders
+
+```bash
+# Ejecutar seeders
+php artisan db:seed
+
+# Ejecutar seeder específico
+php artisan db:seed --class=UserSeeder
+```
+
+## Logs
+
+Los logs se almacenan en `storage/logs/laravel.log` y incluyen:
+
+- Intentos de login
+- Operaciones CRUD de estudiantes
+- Errores de validación
+- Errores de aplicación
+
+## Contribución
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+
+##  Autores
+
+- **Monica Ardila** - *Desarrollo inicial* - [monicaardila](https://github.com/monicaardila)
