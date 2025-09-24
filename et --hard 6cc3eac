@@ -1,0 +1,15 @@
+[33mc9bc61b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Add Procfile for Heroku deployment
+[33m6604bbc[m Add Render configuration files
+[33m435edca[m Add test.txt for healthcheck
+[33md4f5dc8[m Change healthcheck to root path
+[33mf71729b[m Remove Dockerfile and simplify railway.json for NIXPACKS
+[33m8d5366e[m Simplify to basic healthcheck with simple.php
+[33m942659b[m Add Dockerfile for Railway deployment
+[33mb1aafb7[m Add .htaccess and info.php for debugging
+[33m4ab3be0[m Add debug files to troubleshoot Railway deployment
+[33m60290fb[m Add simple HTML healthcheck and change path to root
+[33mcabe254[m Add standalone health.php file for Railway healthcheck
+[33mb15b2ca[m Improve healthcheck - handle both / and /health routes
+[33m6cc3eac[m Fix Railway deployment: correct railway.json config and add /health route
+[33m9ffe500[m Fix healthcheck - add simple healthcheck in index.php
+[33ma13ac69[m Simplificar configuración de Railway - usar comando directo
