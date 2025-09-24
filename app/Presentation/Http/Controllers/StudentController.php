@@ -12,6 +12,7 @@ use App\Shared\Exceptions\StudentEmailAlreadyExistsException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class StudentController extends Controller
 {
@@ -37,10 +38,50 @@ class StudentController extends Controller
         }
     }
 
-    public function store(CreateStudentRequest $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
         try {
-            $studentDTO = StudentDTO::fromArray($request->validated());
+            // Handle JSON requests
+            if ($request->isJson()) {
+                $content = $request->getContent();
+                // Fix UTF-8 encoding issues
+                $content = mb_convert_encoding($content, 'UTF-8', 'UTF-8');
+                $data = json_decode($content, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    Log::error('JSON decode error', ['error' => json_last_error_msg()]);
+                    return response()->json([
+                        'message' => 'Invalid JSON data'
+                    ], 400);
+                }
+            } else {
+                $data = $request->all();
+            }
+            
+            // Manual validation
+            $validator = \Validator::make($data, [
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:students,email',
+                'grade' => 'required|string|max:50',
+            ], [
+                'name.required' => 'El nombre es obligatorio',
+                'name.string' => 'El nombre debe ser una cadena de texto',
+                'name.max' => 'El nombre no puede exceder los 255 caracteres',
+                'email.required' => 'El email es obligatorio',
+                'email.email' => 'El email debe tener un formato válido',
+                'email.unique' => 'El email ya está registrado',
+                'grade.required' => 'El grado es obligatorio',
+                'grade.string' => 'El grado debe ser una cadena de texto',
+                'grade.max' => 'El grado no puede exceder los 50 caracteres',
+            ]);
+            
+            if ($validator->fails()) {
+                return response()->json([
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+            
+            $studentDTO = StudentDTO::fromArray($validator->validated());
             $student = $this->studentService->createStudent($studentDTO);
             
             Log::info('Student created successfully', ['student_id' => $student->id]);

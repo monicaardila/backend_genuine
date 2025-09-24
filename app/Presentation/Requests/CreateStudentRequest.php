@@ -34,4 +34,15 @@ class CreateStudentRequest extends FormRequest
             'grade.max' => 'El grado no puede exceder los 50 caracteres',
         ];
     }
+
+    protected function prepareForValidation()
+    {
+        // Handle JSON requests properly
+        if ($this->header('Content-Type') === 'application/json' || $this->isJson()) {
+            $data = json_decode($this->getContent(), true);
+            if (is_array($data)) {
+                $this->merge($data);
+            }
+        }
+    }
 }
