@@ -17,6 +17,22 @@ php artisan migrate --force
 echo "Ejecutando seeders..."
 php artisan db:seed --force
 
+# Verificar que el usuario de prueba existe
+echo "Verificando usuario de prueba..."
+php artisan tinker --execute="
+if (App\Models\User::count() === 0) {
+    echo 'Creando usuario de prueba...';
+    App\Models\User::create([
+        'name' => 'Usuario Prueba',
+        'email' => 'prueba@example.com',
+        'password' => bcrypt('12345678')
+    ]);
+    echo 'Usuario de prueba creado exitosamente';
+} else {
+    echo 'Usuario de prueba ya existe';
+}
+"
+
 # Limpiar cache
 echo "Limpiando cache..."
 php artisan config:cache
@@ -29,4 +45,4 @@ if [ -z "$JWT_SECRET" ]; then
     php artisan jwt:secret --force
 fi
 
-echo "✅ Despliegue completado!"
+echo "Despliegue completado!"
